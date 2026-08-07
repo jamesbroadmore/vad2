@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { VIDEO_URL } from "../mock";
+import { VIDEO_URL, VIDEO_URL_WEBM } from "../mock";
 
-// Full-screen animated VAD logo intro that plays once per browser session
+// Full-screen animated VAD logo intro that plays once per browser session.
+// Uses WebM (VP9) + MP4 (H.264) sources for universal codec support and
+// gracefully dismisses itself if the video cannot be played at all.
 export default function IntroSplash() {
   const [show, setShow] = useState(() => !sessionStorage.getItem("vad_intro_done"));
   const [fadeOut, setFadeOut] = useState(false);
@@ -10,7 +12,7 @@ export default function IntroSplash() {
   useEffect(() => {
     if (!show) return;
     document.body.style.overflow = "hidden";
-    const timeout = setTimeout(() => end(), 6000); // safety timeout
+    const timeout = setTimeout(() => end(), 8000); // safety timeout
     return () => {
       clearTimeout(timeout);
       document.body.style.overflow = "";
@@ -31,22 +33,37 @@ export default function IntroSplash() {
 
   return (
     <div
+      data-testid="intro-splash"
       className={`fixed inset-0 z-[100] bg-black grid place-items-center transition-opacity duration-700 ${
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
     >
+      {/* Brand fallback shown behind the video while it loads (or if it can't play) */}
+      <div className="absolute inset-0 grid place-items-center pointer-events-none">
+        <div className="font-display text-5xl md:text-7xl font-bold tracking-widest text-white/90 select-none">
+          VAD<span className="text-vad-red">.</span>
+        </div>
+      </div>
+
       <video
         ref={videoRef}
-        src={VIDEO_URL}
+        data-testid="intro-video"
         autoPlay
         muted
         playsInline
+        preload="auto"
         onEnded={end}
-        className="w-[80%] max-w-[720px] object-contain"
-      />
+        onError={end}
+        className="relative w-[80%] max-w-[720px] object-contain"
+      >
+        <source src={VIDEO_URL_WEBM} type="video/webm" />
+        <source src={VIDEO_URL} type="video/mp4" />
+      </video>
+
       <button
+        data-testid="intro-skip-button"
         onClick={end}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 font-display text-xs tracking-widest-xl text-white/50 hover:text-white transition-colors uppercase"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 font-display text-xs tracking-widest-xl text-white/50 hover:text-white transition-colors uppercase"
       >
         Skip Intro
       </button>

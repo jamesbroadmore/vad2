@@ -13,7 +13,7 @@ data: {"delta": "token"}\n\n
 ...
 data: [DONE]\n\n
 ```
-- Model: Gemini `gemini-3.5-flash` via emergentintegrations (EMERGENT_LLM_KEY).
+- Model: Gemini `gemini-3-flash-preview` via emergentintegrations (EMERGENT_LLM_KEY).
 - Multi-turn: LlmChat instance cached per session_id; messages persisted to `chat_messages` collection.
 - System prompt: VAD product/spec specialist (wheels, aero, programmes, sizes, contact info).
 

@@ -2,6 +2,7 @@
 // NOTE: This data is MOCKED for the frontend teaser. Backend integration replaces enquiry submission.
 
 export const VIDEO_URL = "/vad_intro.mp4";
+export const VIDEO_URL_WEBM = "/vad_intro.webm";
 
 export const navLinks = [
   { label: "Home", path: "/" },
