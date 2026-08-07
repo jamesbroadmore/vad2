@@ -10,6 +10,8 @@ import Home from "./pages/Home";
 import Wheels from "./pages/Wheels";
 import Aero from "./pages/Aero";
 import Programmes from "./pages/Programmes";
+import Gallery from "./pages/Gallery";
+import ForSale from "./pages/ForSale";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
@@ -34,6 +36,8 @@ function App() {
             <Route path="/wheels" element={<Wheels />} />
             <Route path="/aero" element={<Aero />} />
             <Route path="/programmes" element={<Programmes />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/for-sale" element={<ForSale />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>

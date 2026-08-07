@@ -13,7 +13,7 @@ export default function About() {
         tag="ABOUT VAD"
         title="Engineered In England"
         sub="VAD Design are specialists in forged wheels, carbon fibre and GT aero styling — delivering bespoke custom applications for the world's most demanding drivers."
-        image="https://images.unsplash.com/photo-1578478412827-8c0ec4fdde15?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600"
+        image="/vad/programmes/porsche-991-gt3r.jpg"
       />
 
       <section className="max-w-7xl mx-auto px-5 md:px-8 py-20 grid md:grid-cols-2 gap-14 items-center">
@@ -40,8 +40,8 @@ export default function About() {
           </Link>
         </div>
         <div className="reveal grid grid-cols-2 gap-4">
-          <img src="https://images.unsplash.com/photo-1614740932412-963402533312?crop=entropy&cs=srgb&fm=jpg&q=85&w=700" alt="wheel" className="w-full aspect-[3/4] object-cover mt-8" />
-          <img src="https://images.unsplash.com/photo-1706883376540-b21e5559fc45?crop=entropy&cs=srgb&fm=jpg&q=85&w=700" alt="car" className="w-full aspect-[3/4] object-cover" />
+          <img src="/vad/wheels/vad-f1.jpg" alt="VAD F1 forged magnesium wheel" className="w-full aspect-[3/4] object-cover mt-8" />
+          <img src="/vad/programmes/porsche-997-gt3r.jpg" alt="Porsche 997.2 GT3R carbon widebody build" className="w-full aspect-[3/4] object-cover" />
         </div>
       </section>
 

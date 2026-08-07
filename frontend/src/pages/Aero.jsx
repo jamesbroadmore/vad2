@@ -19,7 +19,7 @@ export default function Aero() {
         tag="AERO & CARBON FIBRE"
         title="GT Aero Programme"
         sub="Carbon fibre body styling and aero conversions engineered for downforce, balance and unmistakable motorsport presence."
-        image="https://images.pexels.com/photos/5507143/pexels-photo-5507143.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        image="/vad/aero/porsche-997-aero.jpg"
       />
 
       <section className="max-w-7xl mx-auto px-5 md:px-8 py-20">

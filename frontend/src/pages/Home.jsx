@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Disc3, Wind, Car, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
-import { heroSlides, services, programmes, stats, wheelBenefits } from "../mock";
+import { heroSlides, services, programmes, stats, wheelBenefits, carForSale } from "../mock";
 import useReveal from "../hooks/useReveal";
 
 const iconMap = { disc: Disc3, wind: Wind, car: Car, wrench: Wrench };
@@ -185,6 +185,32 @@ export default function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* FOR SALE SPOTLIGHT */}
+      <section className="relative overflow-hidden border-y border-white/10">
+        <img src={carForSale.hero} alt={carForSale.name} className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/30" />
+        <div className="relative max-w-7xl mx-auto px-5 md:px-8 py-24 md:py-32">
+          <div className="reveal max-w-xl">
+            <span className="inline-flex items-center gap-2 bg-vad-red text-white font-display uppercase tracking-wider text-xs px-3 py-1.5 mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> For Sale · 1-of-1
+            </span>
+            <h2 className="font-display font-bold text-4xl md:text-5xl text-white mb-4">{carForSale.name}</h2>
+            <p className="text-white/70 text-lg mb-6">
+              {carForSale.subtitle} — LS3 V8, Tremec 6-speed, full VAD dry-carbon GTRR widebody.
+            </p>
+            <div className="flex flex-wrap items-center gap-6">
+              <p className="font-display font-bold text-4xl text-vad-red">{carForSale.price}</p>
+              <Link
+                to="/for-sale"
+                className="inline-flex items-center gap-2 bg-white text-black font-display uppercase tracking-wider px-7 py-3.5 hover:bg-vad-red hover:text-white transition-colors"
+              >
+                View Listing <ArrowRight size={18} />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

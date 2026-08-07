@@ -55,14 +55,14 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-6">
           {navLinks.map((l) => {
             const active = location.pathname === l.path;
             return (
               <Link
                 key={l.path}
                 to={l.path}
-                className={`font-display text-sm tracking-wider uppercase relative py-1 transition-colors ${
+                className={`font-display text-[13px] tracking-wider uppercase relative py-1 transition-colors ${
                   active ? "text-white" : "text-white/60 hover:text-white"
                 }`}
               >

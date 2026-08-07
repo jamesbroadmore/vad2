@@ -58,14 +58,22 @@ export default function Programmes() {
               <p className="text-vad-red text-xs uppercase tracking-wider mb-2">{active.category}</p>
               <h3 className="font-display font-bold text-3xl text-white mb-4">{active.name}</h3>
               <p className="text-white/65 leading-relaxed mb-6">{active.blurb}</p>
-              <div className="flex flex-wrap gap-2 mb-8">
+              <div className="flex flex-wrap gap-2 mb-6">
                 {active.tags.map((t) => (
                   <span key={t} className="text-xs uppercase tracking-wider border border-vad-red/50 text-vad-red px-3 py-1.5">{t}</span>
                 ))}
               </div>
-              <Link to="/contact" className="inline-flex items-center gap-2 bg-vad-red text-white font-display uppercase tracking-wider px-7 py-3.5 hover:bg-white hover:text-black transition-colors">
-                Enquire About This Build <ArrowRight size={17} />
-              </Link>
+              <p className="font-display uppercase tracking-wider text-sm text-white/70 mb-6">{active.price}</p>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/contact" className="inline-flex items-center gap-2 bg-vad-red text-white font-display uppercase tracking-wider px-7 py-3.5 hover:bg-white hover:text-black transition-colors">
+                  Enquire About This Build <ArrowRight size={17} />
+                </Link>
+                {active.id === "bmw-z4-gt3" && (
+                  <Link to="/for-sale" className="inline-flex items-center gap-2 border border-white/25 text-white font-display uppercase tracking-wider px-7 py-3.5 hover:border-vad-red hover:text-vad-red transition-colors">
+                    View 1-of-1 For Sale <ArrowRight size={17} />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

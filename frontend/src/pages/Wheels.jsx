@@ -26,7 +26,7 @@ export default function Wheels() {
         tag="FORGED WHEELS"
         title="Magnesium & Aluminium"
         sub="1 & 2 piece super lightweight forged wheel designs. If you want the pinnacle product, choose magnesium forged."
-        image="https://images.unsplash.com/photo-1614689304159-273632ab5c5a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600"
+        image="/vad/wheels/wheels-hero.jpg"
       />
 
       {/* Benefits */}
@@ -56,7 +56,13 @@ export default function Wheels() {
               <div className="p-6">
                 <p className="text-vad-red text-xs uppercase tracking-wider mb-1">{w.type}</p>
                 <h3 className="font-display text-xl text-white mb-2">{w.name}</h3>
-                <p className="text-white/50 text-sm">{w.sizes}</p>
+                <p className="text-white/50 text-sm mb-4">{w.sizes}</p>
+                <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                  <span className="font-display uppercase tracking-wider text-xs text-white/70">{w.price}</span>
+                  <Link to="/contact" className="font-display uppercase tracking-wider text-xs text-vad-red hover:text-white transition-colors inline-flex items-center gap-1">
+                    Enquire <ArrowRight size={13} />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

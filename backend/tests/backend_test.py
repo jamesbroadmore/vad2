@@ -130,3 +130,13 @@ def test_create_enquiry_missing_field_422(missing):
     payload.pop(missing)
     r = requests.post(f"{API}/enquiries", json=payload)
     assert r.status_code == 422, f"Expected 422 for missing {missing}, got {r.status_code}"
+
+
+
+# ---------- Z4 for-sale knowledge ----------
+def test_chat_mentions_z4_price():
+    sid = f"TEST_z4_{uuid.uuid4().hex[:8]}"
+    text, done = _stream_chat(sid, "Tell me about the BMW Z4 GT3 V8 for sale")
+    assert done
+    assert "snag" not in text.lower(), f"Got error fallback: {text}"
+    assert "68,000" in text or "68000" in text or "£68" in text, f"No £68,000 in response: {text}"
