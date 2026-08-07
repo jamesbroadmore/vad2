@@ -84,12 +84,24 @@ GUIDELINES:
 chat_sessions = {}
 
 
-def get_chat(session_id: str) -> LlmChat:
+async def get_chat(session_id: str) -> LlmChat:
     if session_id not in chat_sessions:
+        # Rehydrate prior conversation from Mongo so context survives backend
+        # restarts / horizontal scaling (cache miss -> rebuild from persisted history).
+        initial = [{"role": "system", "content": SYSTEM_MESSAGE}]
+        prior = await db.chat_messages.find(
+            {"session_id": session_id}, {"_id": 0}
+        ).sort("timestamp", 1).to_list(100)
+        for m in prior:
+            if m["role"] == "user":
+                initial.append({"role": "user", "content": [{"type": "text", "text": m["content"]}]})
+            elif m["role"] == "assistant":
+                initial.append({"role": "assistant", "content": m["content"]})
         chat_sessions[session_id] = LlmChat(
             api_key=EMERGENT_LLM_KEY,
             session_id=session_id,
             system_message=SYSTEM_MESSAGE,
+            initial_messages=initial,
         ).with_model("gemini", "gemini-3-flash-preview")
     return chat_sessions[session_id]
 
@@ -145,7 +157,7 @@ async def root():
 
 @api_router.post("/chat")
 async def chat_stream(req: ChatRequest):
-    chat = get_chat(req.session_id)
+    chat = await get_chat(req.session_id)
     user_msg = ChatMessage(session_id=req.session_id, role="user", content=req.message)
     await db.chat_messages.insert_one(user_msg.model_dump())
 
