@@ -105,3 +105,11 @@ code {
 .animate-marquee {
   animation: marquee 26s linear infinite;
 }
+
+@keyframes vad-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.animate-vad-bob {
+  animation: vad-bob 2.2s ease-in-out infinite;
+}

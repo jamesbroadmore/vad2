@@ -96,14 +96,36 @@ export default function ChatWidget() {
   return (
     <>
       {/* Toggle button */}
-      <button
-        data-testid="chat-toggle-button"
-        onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-[80] w-14 h-14 rounded-full bg-vad-red text-white grid place-items-center shadow-lg shadow-red-900/40 hover:scale-105 transition-transform"
-        aria-label="Open VAD assistant"
-      >
-        {open ? <X size={24} /> : <MessageSquare size={24} />}
-      </button>
+      <div className="fixed bottom-6 right-6 z-[80] flex items-center gap-3">
+        {/* Attention label — only when panel closed */}
+        {!open && (
+          <span
+            data-testid="chat-toggle-label"
+            className="hidden sm:flex items-center gap-2 bg-[#111114] border border-vad-red/40 text-white text-sm font-display uppercase tracking-wider px-4 py-2.5 rounded-full shadow-lg shadow-black/50 animate-vad-bob"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Ask VAD AI
+          </span>
+        )}
+
+        <button
+          data-testid="chat-toggle-button"
+          onClick={() => setOpen((o) => !o)}
+          className="relative w-16 h-16 rounded-full bg-vad-red text-white grid place-items-center shadow-xl shadow-red-900/60 hover:scale-110 transition-transform focus:outline-none"
+          aria-label="Open VAD assistant"
+        >
+          {/* Pulsing attention rings — only when closed */}
+          {!open && (
+            <>
+              <span className="absolute inset-0 rounded-full bg-vad-red opacity-60 animate-ping" />
+              <span className="absolute -inset-1 rounded-full ring-2 ring-vad-red/40 animate-pulse" />
+            </>
+          )}
+          <span className="relative z-10">
+            {open ? <X size={26} /> : <MessageSquare size={26} />}
+          </span>
+        </button>
+      </div>
 
       {/* Panel */}
       <div
