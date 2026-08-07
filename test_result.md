@@ -101,3 +101,94 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Clone vadwheels.com content into a new VAD-branded full-stack app (dark premium motorsport branding) with a Gemini-powered chatbot product/spec assistant (wheels, aero, sizes, enquiries)."
+
+backend:
+  - task: "Gemini AI chat endpoint POST /api/chat (SSE streaming, multi-turn)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented with emergentintegrations LlmChat, model gemini-3-flash-preview (gemini-3.5-flash not allowed by key). Verified via curl: streaming deltas + multi-turn context retention on session test_sess_2. Messages persisted to chat_messages collection."
+  - task: "Enquiries POST /api/enquiries + GET /api/enquiries"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Verified POST via curl, returns {id, status: received}. Stored in enquiries collection."
+  - task: "Chat history GET /api/chat/{session_id}/history"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented, not yet tested."
+
+frontend:
+  - task: "ChatWidget streaming chat UI"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/ChatWidget.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "SSE parsing of delta chunks. data-testids: chat-toggle-button, chat-panel, chat-messages, chat-suggestion, chat-input, chat-send-button. Widget opens correctly (screenshot verified)."
+  - task: "Contact form enquiry submission"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/Contact.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Posts to /api/enquiries. data-testids: contact-name-input, contact-email-input, contact-phone-input, contact-interest-select, contact-message-textarea, contact-submit-button, contact-success-message."
+  - task: "Site pages (Home, Wheels, Aero, Programmes, About, Contact) + IntroSplash"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Intro splash plays once per session (6s safety timeout, Skip Intro button). Home renders correctly after skip (screenshot verified)."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Gemini AI chat endpoint POST /api/chat (SSE streaming, multi-turn)"
+    - "ChatWidget streaming chat UI"
+    - "Contact form enquiry submission"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Backend built: /api/chat (Gemini gemini-3-flash-preview via emergentintegrations, SSE streaming, multi-turn cached sessions, Mongo persistence), /api/enquiries POST/GET, /api/chat/{session_id}/history. Curl-verified chat streaming + multi-turn + enquiry creation. Note: intro splash overlay appears on first visit — click 'Skip Intro' or wait 6s before interacting with pages. Please test full backend + frontend flows."
