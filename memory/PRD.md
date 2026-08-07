@@ -1,41 +1,42 @@
-# VAD (V.A.D Design) — Product Requirements & Status
+# VAD Design — Product Requirements & Status
 
 ## Original Problem Statement
-Clone all content from vadwheels.com into a new **dark, premium motorsport-branded full-stack website** for VAD (V.A.D Design), a UK forged-wheel / carbon-aero / widebody-programme engineering company. Requirements:
-- Multi-page navigation: Home, Forged Wheels, Aero & Carbon, Programmes, About, Contact
-- Intro splash video (plays once per browser session)
-- Gemini-powered AI chat widget acting as a VAD product/spec assistant
-- Contact enquiry form persisted to a real database
-- "Ensure all the wiring front and back is done correctly and all features are working as intended. Future proof this website."
+Rebuild vadwheels.com / vaddesign.com as a new dark, premium motorsport-branded **full-stack** digital home for VAD (V.A.D Design). Multi-page site (Home, Wheels, Aero, Programmes, About, Contact) with an intro splash video, a Gemini-powered AI product/spec assistant, and real DB-backed enquiry submission. User directive: "ensure all the wiring front and back is done correctly and all features are working as intended. future proof this website."
 
-User language: **English only.**
+## Stack / Architecture
+- **Frontend**: React (CRA + craco), Tailwind, shadcn/ui, lucide-react, react-router. Reads `REACT_APP_BACKEND_URL`.
+- **Backend**: FastAPI (`/app/backend/server.py`), all routes under `/api`. Motor/MongoDB.
+- **AI**: Gemini via `emergentintegrations` (`LlmChat`, model `gemini-3-flash-preview`), streaming SSE. Uses `EMERGENT_LLM_KEY`.
+- **DB collections**: `chat_messages`, `enquiries`, `status_checks`.
+- **Images**: Real VAD photography self-hosted under `/app/frontend/public/vad/{programmes,wheels,aero,z4}/`.
+- **Intro video**: `/public/vad_intro.{webm,mp4}` (WebM/VP9 + MP4/H.264 faststart, graceful onError fallback).
 
-## Tech Stack
-- Frontend: React (CRA + CRACO), Tailwind CSS, react-router-dom, lucide-react icons
-- Backend: FastAPI + Motor (async MongoDB)
-- AI: Gemini `gemini-3-flash-preview` via `emergentintegrations` LlmChat (EMERGENT_LLM_KEY)
+## Key API Endpoints
+- `GET /api/` health
+- `POST /api/chat` → SSE stream (`data:{delta}` … `data:[DONE]`), multi-turn per `session_id`
+- `GET /api/chat/{session_id}/history`
+- `POST /api/enquiries` → `{id,status:'received'}` · `GET /api/enquiries`
 
-## Architecture
-- `/app/backend/server.py` — API (`/api` prefix): `GET /api/`, `POST /api/chat` (SSE stream), `GET /api/chat/{session_id}/history`, `POST|GET /api/enquiries`, `POST|GET /api/status`.
-- Mongo collections: `chat_messages` {id, session_id, role, content, timestamp}, `enquiries` {id, name, email, phone, interest, message, created_at}.
-- Frontend: `App.js` routes 6 pages; `ChatWidget.jsx` → `/api/chat` (parses SSE deltas); `Contact.jsx` → `/api/enquiries`; `IntroSplash.jsx` dual-source video.
-- Brand/product page content is intentionally **static** in `src/mock.js` (no CRUD needed per contracts.md). Only chat + enquiries are dynamic.
+## Pages / Routes
+`/` Home · `/wheels` · `/aero` · `/programmes` · `/gallery` · `/for-sale` · `/about` · `/contact`
 
-## Implemented (verified) — 2026-08-07
-- [x] Full 6-page dark motorsport-branded frontend
-- [x] Intro splash video **FIXED & future-proofed**: was error 4 / black screen (H.264-only mp4 with moov atom at end). Now serves WebM/VP9 + MP4/H.264(faststart) dual sources + graceful `onError` dismiss + brand fallback. Verified playing (readyState 4) in browser.
-- [x] Gemini AI chat widget — streaming SSE, VAD-specific system prompt, verified relevant answers
-- [x] Multi-turn chat memory — **now rehydrates from MongoDB on cache miss**, so context survives backend restarts / horizontal scaling (verified via restart test recalling prior fact)
-- [x] Contact enquiry form → persists to Mongo, success state verified
-- [x] Chat history endpoint
-- [x] Comprehensive testing: testing_agent iteration_1 = 100% backend (8/8 pytest) + 100% frontend
+## Implemented (verified via testing_agent — iteration_1 & iteration_2, 100%)
+- 2026-06: **Intro video fixed & future-proofed** — was error 4 (H.264-only + moov-at-end). Added WebM/VP9 source + MP4 faststart + graceful `onError` dismiss. Plays on all browsers.
+- 2026-06: **Full front↔back wiring verified** — Gemini chat (streaming, multi-turn, persisted), Contact→enquiries CRUD, chat history.
+- 2026-06: **Real VAD content** — crawled live site; self-hosted ~55 real photos (car builds, wheels, carbon aero, BMW Z4).
+- 2026-06: **Gallery page** (`/gallery`) — category filters (All / GT Programmes / Forged Wheels / Carbon Aero / BMW Z4 GT3 V8), masonry grid, reusable `Lightbox` (keyboard + arrow nav).
+- 2026-06: **Cars For Sale** (`/for-sale`) — 1-of-1 BMW Z4 GT3 V8 @ **£68,000**, full spec, highlights, gallery + lightbox, enquire CTAs. Home page "For Sale" spotlight. Assistant knows the listing.
+- 2026-06: **POA pricing** — wheels/aero/programmes marked "POA — Price on application"; Z4 is the only fixed price.
+- 2026-06: **Vercel-ready frontend** — added `frontend/vercel.json` (CRA build + SPA rewrites) for hybrid deploy (frontend on Vercel, backend on Emergent).
 
-## Backlog / Future (P1/P2 — optional, from code review)
-- P2: Rate limiting on `/api/chat` and `/api/enquiries`
-- P2: Use Pydantic `EmailStr` for enquiry email validation
-- P2: Enquiry email notifications (e.g. Resend/SendGrid) to VAD inbox
-- P2: Admin view to browse submitted enquiries
+## Deployment notes
+- Recommended: Emergent Deploy (handles FastAPI + Mongo + SSE natively).
+- Hybrid (user's path): push via "Save to Github" → import `frontend/` into Vercel (Root Dir = `frontend`), set `REACT_APP_BACKEND_URL` to the Emergent-deployed backend. Backend + Mongo + SSE stay on Emergent.
 
-## Test Credentials
-- No authentication in this app.
-- EMERGENT_LLM_KEY set in `/app/backend/.env` for Gemini chat.
+## Backlog / Roadmap
+- **P1 Admin Inbox**: protected page for the team to read/manage submitted enquiries.
+- **P1 Enquiry Alerts**: email notification on new enquiry (e.g. Resend/SendGrid).
+- **P2 Wheel Configurator**: visual model/size/finish picker feeding into the enquiry.
+- **P2 Future-proofing (from test review)**: rehydrate `LlmChat` from Mongo on cache miss (survive restarts / scale); rate-limit `/api/chat` & `/api/enquiries`; `EmailStr` validation on enquiries.
+
+## No auth in app (no test credentials needed).
